@@ -1,0 +1,63 @@
+import sys
+
+def CreateDT(data, attributes):
+    print("...build classifier...")
+
+def calcInfoGain(data, attributes):
+    print("...calculate the information gain...")
+    entropy_dic = {}
+    #get each attributes value count
+    for i in range(0, len(attributes)-1):
+        tran_dic = {}
+        for t in data:
+            if tran_dic.has_key(t[i]):
+                tran_dic.update({'{} {}'.format(t[i], t[len(attributes)-1]) : tran_dic.get(t[i])+1})
+            else:
+                tran_dic.update({, t[len(attributes)-1]) : 1})
+        print(tran_dic)
+        val_list = tran_dic.values()
+        
+        #for v in val_list:
+            
+        
+    
+
+if __name__ == "__main__":
+    global class_att_values
+    print("...main...")
+   
+    #open file
+    filename = raw_input("Please enter the data's filename: ")
+    f = None
+    try:
+        f = open(filename, 'r')
+    except IOError:
+        print("Cannot open {}. Check if it exists.".format(filename))
+        sys.exit()
+
+    #find if target attribute exists in file
+    classname = raw_input("Please select a target attribute for classification: ")
+    attributes = f.readline().split()
+    if classname not in attributes:
+        print("Target attribute does not exist in file. Please check your data and try again.")
+        sys.exit()
+    #print(attributes)
+
+    #get the tuples
+    tuples = []
+    for line in f:
+        if len(line.split()) > 0:
+            tuples.append(line.split())
+    #print(tuples)
+    
+    #create global dictionary that contains the values in the class atribute, with their count.
+    class_att_values = {}
+    for t in tuples:
+        if class_att_values.has_key(t[len(t)-1]):
+            class_att_values.update({t[len(t)-1]: class_att_values.get(t[len(t)-1]) + 1})
+        else:
+            class_att_values.update({t[len(t)-1]: 1})
+    #create classifier
+    print(class_att_values)
+    calcInfoGain(tuples, attributes)
+    #CreateDT(tuples, attributes)

@@ -1,0 +1,73 @@
+
+        README File for Decision Tree ID3
+
+ What is it?
+ -----------
+ ID3 is a decision tree algorithm used extensively in data mining.  It
+ mines classification rules from a database, returning these rules in 
+ if-then-else form.  Only binary attributes can be used as the target 
+ attribute to be classified.  The algorithm is greedy, growing a tree at
+ each step by using the attribute which has the most information gain
+ associated with it.
+
+ Installation
+ ------------
+ Please read the instructions given in the file INSTALL in this directory.
+ (*Note: The file INSTALL provides some detail instruction/information on 
+   compiling the original program, code structures, running examples etc.
+   You may include all the information in a single README file.) 
+
+ Usage
+ -----
+ To execute this program, one compiled, type: ID3
+ At the prompt, enter the name of the database file to be mined.  This 
+ database will be analyzed for all binary fields, returning a list from
+ which the user must choose.  The field chosen will be the field for which
+ the rules are generated.  The results will be if-then-else statements 
+ classifying the target attribute.
+
+ Assumptions
+ -----------
+ o  The database file is either space or comma delimited.  If it is comma
+    delimited, there must be no spaces (e.g. "North America" is not allowed).
+ o  The rows of data do not exceed 250 characters in length.
+ o  The number of tuples does not exceed 250.
+ o  The number of fields does not exceed 40.
+ o  There are no missing data values.
+
+ Overview of Program Code
+ ------------------------
+ This program consists of seven C source program files, containing 11 functions
+ including main().  The following illustrates the function distribution:
+
+ ID3.c:		main()
+ readdata.c:	readdata()
+ getattrib.c:	getattrib()
+ maketree.c:	maketree()
+ functions.c:	binary(), sameresults(), oneattrib()
+ ain.c:	choose(), gain(), entropy()
+ printtree.c:	printtree()
+
+ ID3.c contains the main portion of the program.  readdata.c and printdata.c 
+ read and print data respectively.  maketree.c actually builds the decision 
+ tree.  getattrib.c contains the function used to determine the target 
+ attribute.  functions.c contains supplementary functions, such as binary()
+ which determines if a given attribute is binary in nature, sameresults() which
+ determines if the target attribute has the same value for all tuples, and
+ oneattrib() which returns the maximally-occurring value for the target 
+ attribute given that there are no other attributes by which to classify 
+ results.  gain.c contains three functions used in determining the information
+ gain available for a given attribute.
+
+ The following is the code structure:
+ main() --> readdata
+	--> getattrib	--> binary
+	--> maketree	--> sameresults
+			--> oneattrib
+			--> choose	  --> gain	--> entropy
+	--> printtree
+
+ Each function is fully documented in the comments preceding the code.  Please
+ read the source files for more information.
+
+
