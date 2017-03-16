@@ -1,0 +1,8 @@
+IF(temperature=hot)AND(class=p)THEN(outlook=overcast)
+IF(temperature=hot)AND(class=n)AND(windy=true)THEN(outlook=sunny)
+IF(temperature=mild)AND(windy=true)AND(humidity=high)AND(class=p)THEN(outlook=overcast)
+IF(temperature=mild)AND(windy=true)AND(humidity=high)AND(class=n)THEN(outlook=rain)
+IF(temperature=mild)AND(windy=true)AND(humidity=normal)THEN(outlook=sunny)
+IF(temperature=mild)AND(windy=false)AND(class=p)THEN(outlook=rain)
+IF(temperature=mild)AND(windy=false)AND(class=n)THEN(outlook=sunny)
+IF(temperature=cool)AND(windy=false)THEN(outlook=sunny)

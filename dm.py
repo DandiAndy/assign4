@@ -4,37 +4,55 @@ import collections
 import math
 import operator
 
-def CreateDT(data, infoGain, arcs):
-    print("...build classifier...")
+
+
+def CreateDT(data, attributes, rules, first, f):
+    global classname
+    
+    if first: 
+        rules = "IF("
+    else:
+        rules = rules + "AND("
+    c_index = attributes.index(classname)
+
     #find the largest info gain.
-    ig = max(infoGain.iteritems(), key=operator.itemgetter(1))[0]
-    #print(ig)
-    #find the split attributes
-    spl_atts = arcs.get(ig)
-    n_ig = dict(infoGain)
-    del n_ig[ig]
-    #iterate through
-    for arc in arcs:
-        temp = list(data)
-        for t in temp:
-            if arc not in t:
-                temp.remove(t)
-        b = True
-        prev = temp[0][0]
-        for t in temp:
-            if prev != t[len(t)-1]:
-                break
-       #if b, we have a leaf
-        if b:
-            print(prev)
-        else:
-            CreateDT(temp, n_ig, arcs)
+    if len(attributes) > 1:
+        infoGain, arcs = calcInfoGain(data, attributes, classname)
+        #print(infoGain)
+        ig = max(infoGain.iteritems(), key=operator.itemgetter(1))[0]
+    
+        #find the split attributes
+        spl_atts = arcs.get(ig)
+    
+        #iterate through
+        for arc in spl_atts:
+            temp = list(data)
+            r = rules + "{}={})".format(ig, arc)
+            for t in data:
+                if arc not in t:
+                    temp.remove(t)
+            b = True
+            #print(temp)
+            prev = temp[0][c_index]
+            for t in temp:
+                if prev != t[c_index]:
+                    b = False
+                    break
+            #if b, we have a leaf
+            if b:
+                f.write(r + "THEN({}={})\n".format(attributes[c_index], prev))
+            else:
+                r_index = attributes.index(ig)
+                temp_a = list(attributes)
+                del temp_a[r_index]
+                for t in temp:
+                    del t[r_index]
+                CreateDT(temp, temp_a, r, False, f)
             
                 
     
 
 def calcInfoGain(data, attributes, target_class):
-    print("...calculate the information gain...")
     #this method retruns two values. The information gain and the splitting attributes for each node
     gain_dic = {}
     split_dic = {}
@@ -55,7 +73,7 @@ def calcInfoGain(data, attributes, target_class):
     #print(entropyS)
    
     #set up gain dictionary with attributes
-    c_index = attributes.index(target_class)
+
     for a in attributes:
         if a != target_class:
             gain_dic.update({a : entropyS});
@@ -134,7 +152,7 @@ def calcInfoGain(data, attributes, target_class):
     
 
 if __name__ == "__main__":
-    global class_att_values
+    global classname
     print("...main...")
    
     #open file
@@ -159,12 +177,9 @@ if __name__ == "__main__":
     for line in f:
         if len(line.split()) > 0:
             tuples.append(line.split())
-    #print(tuples)
-    
-    #calculate the Info gain for each attribute
-    infoGain, arcs = calcInfoGain(tuples, attributes, classname)
-    print(infoGain)
-    print(arcs)
     
     #create the tree
-    CreateDT(tuples, infoGain, arcs)
+    f.close()
+    f = open('Rules', 'w+')
+    CreateDT(tuples, attributes, "", True, f)
+    f.close()
